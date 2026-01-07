@@ -15,11 +15,11 @@ fun calcVersionCode(): Int {
 }
 
 android {
-    namespace = "io.github.saeeddev94.xray"
+    namespace = "io.vikify.vpn"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "io.github.saeeddev94.xray"
+        applicationId = "io.vikify.vpn"
         minSdk = 26
         targetSdk = 36
         versionCode = calcVersionCode()
