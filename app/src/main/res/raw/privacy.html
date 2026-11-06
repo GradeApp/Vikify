@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vikify VPN privacy policy</title><style>body{max-width:48rem;margin:2rem auto;padding:0 1rem;font:1rem/1.55 system-ui;color:#183133} h1,h2{line-height:1.25}</style></head>
+<body>
+<nav aria-label="Language"><a href="privacy.html" lang="ru" hreflang="ru">Русский</a></nav>
+<main>
+<h1>Vikify VPN privacy policy</h1>
+<p>Effective November 5, 2026</p>
+<h2>Who operates the app</h2>
+<p>VictoriaV publishes the Vikify VPN app for Android. For privacy questions about the app, contact vikify@proton.me. The VPN provider who supplies your subscription operates or selects the subscription and tunnel servers.</p>
+<h2>VPN traffic</h2>
+<p>When you connect, Android sends other apps’ IPv4 traffic and DNS requests through Vikify to the selected VPN endpoint over an encrypted tunnel. The provider sees your source IP, destinations, timing and traffic volume, and can read content without end-to-end encryption. Vikify itself uses the underlying connection to reach the provider. Vikify includes no advertising or analytics SDK and does not monetize traffic.</p>
+<h2>Subscriptions and QR codes</h2>
+<p>Vikify reads one clipboard item when you tap Paste. Camera permission is requested when you choose live scanning. Camera frames and selected QR images are decoded on the device and are not retained or uploaded. After you confirm, the client sends the token in your HTTPS subscription URL to the subscription server to obtain profiles. The client also refreshes profiles manually and periodically. The provider receives the request and your IP address.</p>
+<h2>Storage and network checks</h2>
+<p>The URL, UUIDs, profile settings and selection are kept in encrypted private preferences until you replace or remove access. The client passes the selected configuration to the local Xray process in memory. The app does not keep a browsing history. To check the tunnel, it contacts www.gstatic.com and, if needed, cp.cloudflare.com via the proxy. Those endpoints see the proxy exit IP. The request does not include the subscription token or UUID.</p>
+<p>When you open the profile list or tap Check, Vikify may briefly connect directly to the server addresses and ports in your subscription. It sends no application payload, UUID or subscription token. These servers see your source IP and connection time; the network DNS resolver may receive their domain names. Colours show server reachability only and do not guarantee a working VPN. Results remain in memory for one minute. Checks stop when the app leaves the foreground.</p>
+<h2>Your controls</h2>
+<p>Disconnect from the home screen or notification. Withdraw VPN consent in Help. Remove saved access in Details to delete local access and cancel scheduled updates. Uninstalling deletes local data. Local access removal does not delete records held by an independent provider. Ask your provider about its own server logging, retention and deletion rules.</p>
+</main></body></html>

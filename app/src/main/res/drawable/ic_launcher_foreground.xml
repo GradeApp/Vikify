@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Колибри в безопасной зоне adaptive icon (~66dp из 108dp) -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_launcher_colibri"
+    android:insetLeft="21%"
+    android:insetTop="21%"
+    android:insetRight="21%"
+    android:insetBottom="21%" />

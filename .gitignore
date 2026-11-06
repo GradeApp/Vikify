@@ -1,0 +1,63 @@
+# ── Gradle / build output ──
+.gradle/
+build/
+**/build/
+*.log
+hs_err_pid*.log
+
+# ── Local machine ──
+local.properties
+*.iml
+
+# ── Signing / secrets (never commit) ──
+keystore.properties
+**/keystore.properties
+*.jks
+*.keystore
+*.p12
+*.pem
+*.pfx
+release-keys/
+release-artifacts/
+
+# ── Signed binaries ──
+*.aab
+*.apk
+*.apks
+*.aab.idsig
+
+# ── Crash / QA artefacts ──
+backups/
+crash*.txt
+qa-logcat*.txt
+tombstone*
+**/reports/
+test-artifacts/
+**/test-artifacts/
+ui*.xml
+!app/src/**/ui*.xml
+
+# ── IDE ──
+.idea/
+*.ipr
+*.iws
+.vscode/*
+!.vscode/settings.json
+
+# ── Node / npm (project is pure Gradle; guard against re-introduction) ──
+node_modules/
+package.json
+package-lock.json
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# ── OS junk ──
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# ── Audit helpers (keep TREE_BEFORE.txt; the rest are run-local) ──
+TREE_FOCUSED.txt
+FILES_FOCUSED.txt
