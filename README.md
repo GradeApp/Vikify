@@ -1,5 +1,19 @@
 # Vikify
 
+## Publisher F-Droid repository
+
+Install and update Vikify using [VictoriaV's F-Droid repository](https://94043.net/fdroid/).
+The page provides an Add repository button, QR code and signing fingerprint.
+Manual repository address: `https://94043.net/fdroid/repo/`.
+Android 8.0+ and ARM64 are required. Updates keep existing data when the APK signing certificate matches; do not uninstall first.
+
+This is an independent publisher repository, separate from the F-Droid main catalog.
+The [download page](https://94043.net/vikify/) includes the exact source archive and checksums for its current distribution build.
+
+Установка и обновления через F-Droid: [страница репозитория и QR-код](https://94043.net/fdroid/).
+Это собственный репозиторий VictoriaV, отдельный от основного каталога F-Droid.
+
+
 > **Educational build. Not a commercial product. Not a circumvention service.**
 > **Образовательная сборка. Не коммерческий продукт. Не сервис обхода блокировок.**
 
