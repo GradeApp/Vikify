@@ -1,0 +1,53 @@
+Categories:
+  - Connectivity
+License: MIT
+AuthorName: VictoriaV
+WebSite: https://94043.net/vikify/
+SourceCode: https://github.com/GradeApp/Vikify
+IssueTracker: https://github.com/GradeApp/Vikify/issues
+Changelog: https://github.com/GradeApp/Vikify/releases
+
+AutoName: Vikify
+
+RepoType: git
+Repo: https://github.com/GradeApp/Vikify.git
+Binaries: https://github.com/GradeApp/Vikify/releases/download/vikify-v%v-build%c/Vikify-%v-build%c-arm64-release.apk
+
+Builds:
+  - versionName: 1.6.1
+    versionCode: 24
+    commit: vikify-v1.6.1-build24
+    subdir: app
+    sudo:
+      - apt-get update
+      - apt-get install -y openjdk-17-jdk-headless python3 curl patch
+      - curl -fsSLo /tmp/vikify-go.tar.gz https://go.dev/dl/go1.26.1.linux-amd64.tar.gz
+      - echo '031f088e5d955bab8657ede27ad4e3bc5b7c1ba281f05f245bcc304f327c987a  /tmp/vikify-go.tar.gz'
+        | sha256sum -c
+      - mkdir -p /opt/vikify-go
+      - tar -xzf /tmp/vikify-go.tar.gz -C /opt/vikify-go
+    gradle:
+      - yes
+    prebuild:
+      - sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      - export GO=/opt/vikify-go/go/bin/go
+      - export PATH=/opt/vikify-go/go/bin:$JAVA_HOME/bin:$PATH
+      - cd .. && python3 scripts/build-native.py --prepare
+    ndk: r28c
+    gradleprops:
+      - unsignedRelease=true
+      - nativeGo=/opt/vikify-go/go/bin/go
+
+AllowedAPKSigningKeys: 570b4ad5bbe8ab617b8164226b07be21e8011d977bbe7c4e7070a5b1581e37f0
+
+MaintainerNotes: |-
+  The application's own code is MIT. Xray-core is MPL-2.0, tun2socks is MIT,
+  and Go/mobile are BSD-3-Clause. Exact upstream source trees and patches
+  are under native/. No prebuilt native application code is used.
+  Publish only the reproducibly verified developer-signed APK.
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^vikify-v[\d.]+-build\d+$
+CurrentVersion: 1.6.1
+CurrentVersionCode: 24

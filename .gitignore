@@ -2,6 +2,8 @@
 .gradle/
 build/
 **/build/
+__pycache__/
+*.pyc
 *.log
 hs_err_pid*.log
 
@@ -61,3 +63,7 @@ ehthumbs.db
 # ── Audit helpers (keep TREE_BEFORE.txt; the rest are run-local) ──
 TREE_FOCUSED.txt
 FILES_FOCUSED.txt
+
+# Vendored upstream source includes directories named build; retain them.
+!native/
+!native/**

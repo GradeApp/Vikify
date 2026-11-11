@@ -1,0 +1,1 @@
+Native Xray and tun2socks components now build from pinned public sources. Added reproducible Linux builds and F-Droid metadata. Preserved the application ID and signing certificate for updates without removing subscriptions. Replaced the old launcher icon with a new hummingbird design and documented artwork provenance and open-source licenses.

@@ -1,0 +1,11 @@
+Vikify connects your Android device to a VLESS server or subscription that you provide. No Vikify account or bundled VPN service is required.
+
+Import HTTPS subscriptions, plain or Base64 VLESS lists, or an individual VLESS link. Paste from the clipboard, scan a QR code with the camera, or choose a QR image. Review compatible profiles before saving a mixed list.
+
+Choose REALITY, XHTTP or WebSocket/TLS profiles, refresh your subscription and inspect original profile details. Reachability colours show whether a server's TCP endpoint is reachable; they do not guarantee a working VPN connection.
+
+Connection settings are stored encrypted on the device. There are no advertising or analytics SDKs. The app makes documented connectivity checks and contacts the servers and subscription URL you configure. Camera access is used only for QR scanning.
+
+The interface is available in English and Russian, with a tropical scene and animated hummingbird. Requires Android 8.0 or later and an ARM64 device. No root access is required.
+
+Xray-core and tun2socks are built from pinned open-source code. Server access must be obtained or configured separately; no working credentials are included.

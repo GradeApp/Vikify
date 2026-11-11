@@ -20,15 +20,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
-
-Notes specific to this repository:
-
-1. This MIT licence covers the source code authored in this repository.
-2. It does NOT extend or replace the licences of any third-party components
-   that the build bundles (for example, Xray-core and tun2socks). Those
-   components remain subject to their own licences; see
-   docs/BUNDLED_THIRD_PARTY_NOTICES.md for the inventory and terms.
-3. The application is published for educational and research purposes. See
-   DISCLAIMER.md and docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.en.md /
-   .ru.md for the educational-use statement and the full disclaimer.

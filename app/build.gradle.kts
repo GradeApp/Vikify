@@ -38,7 +38,9 @@ fun loadReleaseSigningProperties(repoRoot: File): Properties? {
     return Properties().apply { f.inputStream().use { load(it) } }
 }
 
-val releaseSigningProps: Properties? = loadReleaseSigningProperties(rootProject.projectDir)
+// F-Droid builds an unsigned APK without ever accessing publisher credentials.
+val unsignedRelease = providers.gradleProperty("unsignedRelease").orNull == "true"
+val releaseSigningProps: Properties? = if (unsignedRelease) null else loadReleaseSigningProperties(rootProject.projectDir)
 val emulatorBuild = providers.gradleProperty("emulator").orNull == "true"
 val publicPolicyUrl = providers.gradleProperty("privacyPolicyUrl").getOrElse("https://94043.net/vikify/privacy.html")
 if (publicPolicyUrl.isNotEmpty()) {
@@ -57,17 +59,26 @@ val releaseSigningConfigured: Boolean =
             !p.getProperty("keyPassword").isNullOrBlank()
     } ?: false
 
+val buildNativeFromSource by tasks.registering(Exec::class) {
+    workingDir(rootProject.projectDir)
+    providers.gradleProperty("nativeGo").orNull?.let { environment("GO", it) }
+    commandLine("python3", "scripts/build-native.py", "--abi", if (emulatorBuild) "x86_64" else "arm64-v8a")
+}
+tasks.named("preBuild").configure { dependsOn(buildNativeFromSource) }
+
 android {
     namespace = "vikify.vpn"
     compileSdk = 36
+    buildToolsVersion = "36.0.0"
+    ndkVersion = "28.2.13676358"
 
     defaultConfig {
         applicationId = "vikify.vpn"
         minSdk = 26
         targetSdk = 36
         // Bump for every private release distributed to users (Android requires strictly increasing).
-        versionCode = 22
-        versionName = "1.6.0"
+        versionCode = 24
+        versionName = "1.6.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("boolean", "EMULATOR_TESTING", emulatorBuild.toString())
         buildConfigField("String", "PUBLIC_PRIVACY_URL", "\"" + publicPolicyUrl + "\"")
@@ -112,11 +123,11 @@ android {
         }
     }
 
+    sourceSets.getByName("main").jniLibs.setSrcDirs(listOf(layout.buildDirectory.dir("native/jniLibs")))
+
     if (emulatorBuild) {
-        require(layout.buildDirectory.file("emulator-native/jniLibs/x86_64/libxray.so").get().asFile.isFile) {
-            "Run scripts/prepare-emulator-native.ps1 before building with -Pemulator=true."
-        }
-        sourceSets.getByName("debug").jniLibs.srcDir(layout.buildDirectory.dir("emulator-native/jniLibs"))
+        // Both x86_64 runtime components now come from buildNativeFromSource.
+        // Preserve optional debug-only certificate/UI fixtures from older QA runs.
         val emulatorManifest = layout.buildDirectory.file("emulator-native/AndroidManifest.xml").get().asFile
         if (emulatorManifest.isFile) {
             sourceSets.getByName("debug").manifest.srcFile(emulatorManifest)
@@ -159,7 +170,7 @@ gradle.taskGraph.whenReady {
     }
     val releasePackagingTasks = setOf("assembleRelease", "bundleRelease", "packageRelease", "signReleaseBundle")
     val needsSignedRelease = allTasks.any { it.project == project && it.name in releasePackagingTasks }
-    if (needsSignedRelease && !releaseSigningConfigured) {
+    if (needsSignedRelease && !unsignedRelease && !releaseSigningConfigured) {
         throw org.gradle.api.GradleException(
             "Signed release requires signing credentials. Use either:\n" +
                 "  • Repository root file keystore.properties (see keystore.properties.example), or\n" +
@@ -168,7 +179,7 @@ gradle.taskGraph.whenReady {
                 "See docs/RELEASE_SIGNING.md"
         )
     }
-    if (needsSignedRelease) {
+    if (needsSignedRelease && !unsignedRelease) {
         val config = android.signingConfigs.getByName("release")
         val keys = KeyStore.getInstance(requireNotNull(config.storeFile), requireNotNull(config.storePassword).toCharArray())
         val certificate = requireNotNull(keys.getCertificate(config.keyAlias)) { "Release certificate is missing" }
@@ -181,7 +192,7 @@ gradle.taskGraph.whenReady {
 }
 
 dependencies {
-    implementation(files("libs/tun2socks.aar"))
+    implementation(files(layout.buildDirectory.file("native/tun2socks.aar")))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)

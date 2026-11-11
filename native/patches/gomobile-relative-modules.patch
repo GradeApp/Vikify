@@ -1,0 +1,24 @@
+--- a/cmd/gomobile/bind.go
++++ b/cmd/gomobile/bind.go
+@@ -323,6 +323,21 @@
+ 		if f == nil {
+ 			return nil
+ 		}
++		// Keep source-built local modules, but do not embed host-specific
++		// absolute checkout paths into the final Go build information.
++		// Stable relative symlinks preserve the full module provenance.
++		for i, replacement := range f.Replace {
++			if !modfile.IsDirectoryPath(replacement.New.Path) {
++				continue
++			}
++			name := fmt.Sprintf("local-module-%d", i)
++			if err := os.Symlink(replacement.New.Path, filepath.Join(dir, name)); err != nil {
++				return err
++			}
++			if err := f.AddReplace(replacement.Old.Path, replacement.Old.Version, "./"+name, ""); err != nil {
++				return err
++			}
++		}
+ 		bs, err := f.Format()
+ 		if err != nil {
+ 			return err

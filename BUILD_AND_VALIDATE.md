@@ -1,4 +1,10 @@
-# Build and validate Vikify 1.5.0
+# Build and validate Vikify
+
+For 1.6.1 and later, follow [the Linux source-build guide](docs/FDROID_BUILD.md)
+first. Native components are compiled from pinned sources. The Windows/prebuilt
+build commands below describe the historical QA workflow through 1.6.0; they are
+retained as test reference, not as the current release build instructions.
+The physical-device probe commands remain applicable to the signed release.
 
 Requires JDK 17+ and Android SDK 36. Normal APKs target ARM64 Android 8+.
 The opt-in emulator build below runs native VPN tests on x86_64.

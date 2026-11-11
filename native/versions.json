@@ -1,0 +1,11 @@
+{
+  "go": "go1.26.1",
+  "goLinuxAmd64Sha256": "031f088e5d955bab8657ede27ad4e3bc5b7c1ba281f05f245bcc304f327c987a",
+  "ndk": "28.2.13676358",
+  "androidApi": 26,
+  "abi": "arm64-v8a",
+  "xray": {"url": "https://github.com/XTLS/Xray-core", "commit": "12ee51e4bb1d02ece4ef4b7114efa2bcdc130995", "tag": "v26.2.6", "license": "MPL-2.0"},
+  "tun2socks": {"url": "https://github.com/xjasonlyu/tun2socks", "commit": "c36137df92a9f9a698a1bae73518c445802df82d", "license": "MIT", "patch": "patches/tun2socks-dependencies.patch"},
+  "gomobile": "v0.0.0-20260217195705-b56b3793a9c4",
+  "gomobilePatch": "patches/gomobile-relative-modules.patch"
+}

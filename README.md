@@ -1,25 +1,16 @@
 # Vikify
 
-## Publisher F-Droid repository
+Install and update with [VictoriaV's F-Droid repository](https://94043.net/fdroid/).
+The page provides the repository link, signing fingerprint and QR code. This is
+an independent publisher repository, separate from the F-Droid main catalog.
+Установка и обновления: [репозиторий F-Droid и QR-код](https://94043.net/fdroid/).
 
-Install and update Vikify using [VictoriaV's F-Droid repository](https://94043.net/fdroid/).
-The page provides an Add repository button, QR code and signing fingerprint.
-Manual repository address: `https://94043.net/fdroid/repo/`.
-Android 8.0+ and ARM64 are required. Updates keep existing data when the APK signing certificate matches; do not uninstall first.
+> Free and open source Android VLESS VPN client. Supply your own server or subscription.
+> Свободный VLESS VPN-клиент для Android. Подключите свой сервер или подписку.
 
-This is an independent publisher repository, separate from the F-Droid main catalog.
-The [download page](https://94043.net/vikify/) includes the exact source archive and checksums for its current distribution build.
-
-Установка и обновления через F-Droid: [страница репозитория и QR-код](https://94043.net/fdroid/).
-Это собственный репозиторий VictoriaV, отдельный от основного каталога F-Droid.
-
-
-> **Educational build. Not a commercial product. Not a circumvention service.**
-> **Образовательная сборка. Не коммерческий продукт. Не сервис обхода блокировок.**
-
-Vikify is an Android VPN client built for **educational and research purposes**:
-it demonstrates how the Android `VpnService` API, a native proxy core
-(Xray-core), and a TUN-to-SOCKS bridge (`tun2socks`) fit together.
+Vikify is a functional Android VPN client using Android `VpnService`, Xray-core
+and a tun2socks bridge. Both native components are built from pinned public
+source included in this repository.
 It imports HTTPS subscriptions from VLESS providers, plain or Base64 lists and individual VLESS links, and stores connection
 profiles locally. There is no account registration or analytics in the app.
 
@@ -56,7 +47,7 @@ accepts clipboard text, live QR scans and QR images. Mixed lists require confirm
 subscription variants and automatic client-side profile selection are planned.
 The provider's Automatic profile routes new connections on the server side.
 
-The project is primarily a study of:
+The application uses:
 
 - Android `VpnService` TUN setup and routing;
 - Native library packaging (`arm64-v8a` only);
@@ -70,10 +61,10 @@ The project is primarily a study of:
 | Platform | Android 8.0+ (API 26+) |
 | Primary ABI | `arm64-v8a` only |
 | Language / UI | Kotlin + Jetpack Compose + Material 3 |
-| Version | 1.6.0 (versionCode 22) |
+| Version | 1.6.1 (versionCode 24; F-Droid preparation) |
 | Publisher | VictoriaV · [Privacy policy](https://94043.net/vikify/privacy.html) |
 | Min SDK / Target SDK | 26 / 36 |
-| Third-party cores | Xray-core (`libxray.so`), tun2socks (`libtun2socks.so`) |
+| Third-party cores | Xray-core (`libxray.so`), tun2socks (source-built Go/JNI AAR) |
 | Analytics / telemetry | None |
 | Configuration source | User-provided HTTPS VLESS subscription, plain/Base64 list or individual VLESS link |
 | Account / subscription | No sign-up; one imported subscription |
@@ -83,8 +74,8 @@ The project is primarily a study of:
 
 ### Disclaimer — TL;DR
 
-- The app is provided **as-is, with no warranty**, for **educational and
-  research use only**.
+- The app is provided **as-is, with no warranty**, under the MIT license for
+  its own code. There is no educational-only or non-commercial restriction.
 - The authors disclaim **all liability** for any consequence, direct or
   indirect, of using or being unable to use the app.
 - **You (the user) are solely responsible** for complying with the laws,
@@ -96,17 +87,24 @@ The project is primarily a study of:
 
 ### Build
 
+Linux source build and reproducibility: [F-Droid build guide](docs/FDROID_BUILD.md).
+Pinned native sources and licenses: [native/README.md](native/README.md).
+The previous prebuilt-native Windows workflow has been superseded by this guide.
+
+
 Debug:
 
 ```
-gradlew.bat assembleDebug
+python3 scripts/build-native.py --prepare
+./gradlew -PunsignedRelease=true assembleDebug
 ```
 
-Release (requires signing; keystore lives **outside** the repo):
+Unsigned release (sign separately; keystore lives **outside** the repo):
 
 ```
-set VIKIFY_KEYSTORE_PROPERTIES=C:\path\outside\repo\keystore.properties
-gradlew.bat assembleRelease
+python3 scripts/build-native.py --prepare
+./gradlew -PunsignedRelease=true assembleRelease
+# Sign the verified APK separately with the existing publisher key; see docs/FDROID_BUILD.md.
 ```
 
 See `docs/user-guide/USER_GUIDE.en.md` and `docs/RELEASE_SIGNING.md` for
@@ -116,7 +114,7 @@ details. A template lives at `keystore.properties.example`.
 
 | Topic | File |
 |---|---|
-| Educational use & disclaimer (EN) | [`docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.en.md`](docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.en.md) |
+| License and disclaimer (EN) | [`docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.en.md`](docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.en.md) |
 | User guide (EN) | [`docs/user-guide/USER_GUIDE.en.md`](docs/user-guide/USER_GUIDE.en.md) |
 | Short disclaimer | [`DISCLAIMER.md`](DISCLAIMER.md) |
 | Privacy policy | [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) |
@@ -145,7 +143,7 @@ Android-приложение, поднимающее локальный VPN-ту
 профилей на клиенте остаются следующим этапом. Профиль «Авто» направляет новые
 соединения на стороне сервера.
 
-Проект — в первую очередь учебный разбор:
+В приложении используются:
 
 - настройки TUN и маршрутизации через `VpnService`;
 - упаковки нативных библиотек (только `arm64-v8a`);
@@ -159,10 +157,10 @@ Android-приложение, поднимающее локальный VPN-ту
 | Платформа | Android 8.0+ (API 26+) |
 | Основная ABI | Только `arm64-v8a` |
 | Язык / UI | Kotlin + Jetpack Compose + Material 3 |
-| Версия | 1.6.0 (versionCode 22) |
+| Версия | 1.6.1 (versionCode 24; F-Droid preparation) |
 | Издатель | VictoriaV · [Политика конфиденциальности](https://94043.net/vikify/privacy.html) |
 | min SDK / target SDK | 26 / 36 |
-| Сторонние ядра | Xray-core (`libxray.so`), tun2socks (`libtun2socks.so`) |
+| Сторонние ядра | Xray-core (`libxray.so`), tun2socks (Go/JNI AAR из исходников) |
 | Аналитика / телеметрия | Нет |
 | Источник конфигурации | HTTPS-подписка VLESS, текстовый/Base64 список или отдельная ссылка VLESS |
 | Аккаунты / подписки | Без регистрации; одна импортированная подписка |
@@ -172,8 +170,9 @@ Android-приложение, поднимающее локальный VPN-ту
 
 ### Отказ от ответственности — TL;DR
 
-- Приложение предоставляется **«как есть», без каких-либо гарантий**, и
-  только для **образовательных и исследовательских целей**.
+- Приложение предоставляется **«как есть», без каких-либо гарантий**.
+  Собственный код распространяется по MIT без ограничений на коммерческое
+  использование или использование только в учебных целях.
 - Авторы снимают **любую ответственность** за прямые и косвенные последствия
   использования или невозможности использования приложения.
 - **Пользователь несёт полную ответственность** за соблюдение законов,
@@ -185,17 +184,22 @@ Android-приложение, поднимающее локальный VPN-ту
 
 ### Сборка
 
+Сборка нативных компонентов теперь выполняется из исходников в Linux.
+Инструменты и проверка воспроизводимости: [руководство](docs/FDROID_BUILD.md).
+
 Отладочная:
 
 ```
-gradlew.bat assembleDebug
+python3 scripts/build-native.py --prepare
+./gradlew -PunsignedRelease=true assembleDebug
 ```
 
-Релизная (нужна настроенная подпись; keystore хранится **вне** репозитория):
+Релизная без подписи (готовый APK подписывается прежним ключом отдельно;
+keystore хранится **вне** репозитория):
 
 ```
-set VIKIFY_KEYSTORE_PROPERTIES=C:\путь\вне\репозитория\keystore.properties
-gradlew.bat assembleRelease
+python3 scripts/build-native.py --prepare
+./gradlew -PunsignedRelease=true assembleRelease
 ```
 
 Подробнее — `docs/user-guide/USER_GUIDE.ru.md` и `docs/RELEASE_SIGNING.md`.
@@ -205,7 +209,7 @@ gradlew.bat assembleRelease
 
 | Тема | Файл |
 |---|---|
-| Образовательное использование и дисклеймер (RU) | [`docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.ru.md`](docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.ru.md) |
+| Лицензия и дисклеймер (RU) | [`docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.ru.md`](docs/legal/EDUCATIONAL_USE_AND_DISCLAIMER.ru.md) |
 | Руководство пользователя (RU) | [`docs/user-guide/USER_GUIDE.ru.md`](docs/user-guide/USER_GUIDE.ru.md) |
 | Короткий дисклеймер | [`DISCLAIMER.md`](DISCLAIMER.md) |
 | Политика приватности | [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) |

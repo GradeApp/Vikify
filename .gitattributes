@@ -1,0 +1,9 @@
+# Preserve exact source/asset bytes across Git and source ZIP checkouts.
+# Executable shell scripts are stored with LF in the source tree.
+* -text
+*.png binary
+*.jpg binary
+*.webp binary
+*.jar binary
+*.aar binary
+*.so binary

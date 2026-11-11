@@ -1,0 +1,18 @@
+[
+  {
+    "Name": "hummingbird-parts.png",
+    "SHA256": "7ed868e720f5fcd4dd9872a39c28157ab1592e1a77f43507afe7f13258c1e3f3"
+  },
+  {
+    "Name": "lagoon-landscape.png",
+    "SHA256": "bf650a237b54b0c82c17ce05e5ce1392259aacc643f033662ae6b5aee0b7ce6b"
+  },
+  {
+    "Name": "lagoon-portrait.png",
+    "SHA256": "de1fc9c6e99eddca2e32cc1e13b0e594e7fead1f064e315db8278f49c70f2bb4"
+  },
+  {
+    "Name": "launcher-hummingbird.png",
+    "SHA256": "33d304e052a32b17d3ee3ad1394968b33a7711e966a0ccf26d38abcc9721dcda"
+  }
+]
