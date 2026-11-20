@@ -7,11 +7,12 @@ SourceCode: https://github.com/GradeApp/Vikify
 IssueTracker: https://github.com/GradeApp/Vikify/issues
 Changelog: https://github.com/GradeApp/Vikify/releases
 
-AutoName: Vikify
+AutoName: Vikify VPN
 
 RepoType: git
 Repo: https://github.com/GradeApp/Vikify.git
-Binaries: https://github.com/GradeApp/Vikify/releases/download/vikify-v%v-build%c/Vikify-%v-build%c-arm64-release.apk
+Binaries: 
+  https://github.com/GradeApp/Vikify/releases/download/vikify-v%v-build%c/Vikify-%v-build%c-arm64-release.apk
 
 Builds:
   - versionName: 1.6.1
@@ -23,8 +24,8 @@ Builds:
       - echo 'deb https://security.debian.org/debian-security bookworm-security main'
         >> /etc/apt/sources.list.d/vikify-bookworm.list
       - apt-get update
-      - apt-get install -y -t bookworm openjdk-17-jdk-headless
-      - apt-get install -y python3 curl patch
+      - apt-get install -y openjdk-17-jdk-headless
+      - apt-get install -y python3 curl patch build-essential
       - update-java-alternatives -s java-1.17.0-openjdk-amd64
       - curl -fsSLo /tmp/vikify-go.tar.gz https://go.dev/dl/go1.26.1.linux-amd64.tar.gz
       - echo '031f088e5d955bab8657ede27ad4e3bc5b7c1ba281f05f245bcc304f327c987a  /tmp/vikify-go.tar.gz'
@@ -34,6 +35,12 @@ Builds:
     gradle:
       - yes
     prebuild:
+      - sed -i '/    if (needsSignedRelease && !unsignedRelease) {/,/^    }/d' build.gradle.kts
+      - "cat >> build.gradle.kts <<'EOF'\n\ntasks.matching { it.name == \"extractReleaseVersionControlInfo\"\
+        \ }.configureEach {\n    doLast {\n        val vcsFiles = outputs.files.asFileTree.matching
+        {\n            include(\"**/version-control-info.textproto\")\n        }.files\n\
+        \        check(vcsFiles.size == 1)\n        vcsFiles.single().writeText(\"\
+        generate_error_reason: NO_SUPPORTED_VCS_FOUND\\n\")\n    }\n}\nEOF\ntrue"
       - sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
       - export GO=/opt/vikify-go/go/bin/go
@@ -52,6 +59,12 @@ MaintainerNotes: |-
   and Go/mobile are BSD-3-Clause. Exact upstream source trees and patches
   are under native/. No prebuilt native application code is used.
   Publish only the reproducibly verified developer-signed APK.
+  F-Droid strips signingConfigs before prebuild. Remove the resulting
+  unused local-keystore validation block for this unsigned build only.
+  Binaries and AllowedAPKSigningKeys still enforce the publisher signature.
+  Build 24 was published from the source archive without .git. Reproduce only
+  its non-executable AGP VCS metadata; the complete source commit is pinned
+  above and all code is independently rebuilt and signature-copy verified.
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^vikify-v[\d.]+-build\d+$

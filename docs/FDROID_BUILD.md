@@ -17,11 +17,27 @@ updates on `main` do not replace its tag, source archive, or APK.
 - Android NDK 28.2.13676358; ARM64, native min API 26.
 - Gradle 8.13 and Android Gradle Plugin 8.13.2.
 - Python 3 (standard library) and GNU patch for the native build and deterministic AAR/JAR packaging.
+- A host C/C++ toolchain (`build-essential`) for compiling the Go/mobile generators.
 
 The current F-Droid CI image is Debian Trixie. The recipe obtains OpenJDK 17
-from the official Debian Bookworm repositories and explicitly selects it for
+from the official Debian Bookworm and Bookworm security repositories and explicitly selects it for
 Gradle. Do not assume `apt-get install openjdk-17-jdk-headless` succeeds against
 Trixie repositories alone.
+
+F-Droid sanitizes Gradle signing configuration before `prebuild`. The recipe
+removes the now-incomplete local-keystore validation block from that temporary
+unsigned build script. This block is not app runtime code. Ordinary publisher
+release builds retain it; `Binaries` and `AllowedAPKSigningKeys` continue to
+enforce the historical developer signature on any F-Droid publication.
+
+Build 24 was originally built from the source archive without a `.git`
+directory. AGP therefore wrote `generate_error_reason: NO_SUPPORTED_VCS_FOUND`
+to `META-INF/version-control-info.textproto`. The recipe reproduces that
+non-executable metadata through the `extractReleaseVersionControlInfo` task.
+It does not replace compiled code or disable signature-copy verification.
+The actual source commit remains pinned in the recipe and the Git checkout
+is retained for F-Droid's source audit. Future releases should use a consistent
+Git/archived-source build convention to avoid this release-specific adjustment.
 
 Set `GO` to the full path of the pinned Go binary, `JAVA_HOME` to OpenJDK 17,
 `ANDROID_HOME` to the SDK and `ANDROID_NDK_HOME` to its pinned NDK directory.

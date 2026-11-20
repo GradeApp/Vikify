@@ -13,6 +13,7 @@ this project is not yet listed on f-droid.org.
 
 [F-Droid build instructions](docs/FDROID_BUILD.md) ·
 [Submission status](fdroid/SUBMISSION.md) ·
+[CI verification report](docs/FDROID_CI_STATUS.md) ·
 [Maintenance and project history](docs/PROJECT_HISTORY.md)
 
 > Free and open source Android VLESS VPN client. Supply your own server or subscription.

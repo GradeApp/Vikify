@@ -5,6 +5,11 @@ an accepted listing. The reviewed source and matching developer-signed APK are
 now public. Copy `metadata/vikify.vpn.yml` into a branch of
 https://gitlab.com/fdroid/fdroiddata when submitting for independent review.
 
+Current result: the official F-Droid buildserver container rebuilt the APK
+successfully and verified its developer signature locally. The public fork's
+hosted pipeline is blocked before job creation by GitLab account verification.
+See [the current CI report](../docs/FDROID_CI_STATUS.md) for evidence and links.
+
 ## Suggested merge request title
 
 New app: Vikify — VLESS VPN client (developer-signed reproducible build)
@@ -78,12 +83,22 @@ checks do not substitute for the F-Droid build server pipeline or manual review.
   documented in [PROJECT_HISTORY.md](../docs/PROJECT_HISTORY.md). The publisher
   supports inclusion and ongoing maintenance. No user-count claim is made;
   consolidated public history and local historical evidence are distinguished.
-- Run the F-Droid CI pipeline and resolve maintainer feedback before acceptance.
+- Complete hosted F-Droid CI and resolve maintainer feedback before acceptance.
+  A public fork and recipe branch exist; no upstream merge request is open.
 
 The November 20 recipe installs OpenJDK 17 from official Debian Bookworm
 repositories because the current F-Droid CI image uses Debian Trixie. It pins
 the Gradle JVM to the same major version as the verified developer build.
+It also installs `build-essential` to compile the Go/mobile host tools from source.
 The reviewed app commit, signed APK and signing key remain unchanged.
+F-Droid's automatic signing-config cleanup leaves an incomplete local-keystore
+validation block in the upstream Gradle file. The recipe removes that unused
+block only from its temporary unsigned build. The publisher release guard and
+the `AllowedAPKSigningKeys` check remain in place for their respective paths.
+The recipe also reproduces build 24's non-executable AGP VCS metadata, which
+records that the publisher build came from a source archive without `.git`.
+The F-Droid checkout is retained, its exact commit is pinned, and every runtime
+component is rebuilt from source before the signature-copy comparison.
 
 The source/metadata preparation does not change existing stable downloads or
 the publisher's F-Droid repository. No GitLab issue or merge request has been sent.
