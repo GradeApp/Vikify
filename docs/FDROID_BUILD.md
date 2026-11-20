@@ -6,6 +6,10 @@ The F-Droid recipe must use `Binaries` and `AllowedAPKSigningKeys` so only
 verified reproducible APKs carrying that developer signature can be published.
 No publisher private key is needed by the build server.
 
+Current maintenance and provenance: [project history](PROJECT_HISTORY.md).
+The external submission recipe pins the original release commit. Documentation
+updates on `main` do not replace its tag, source archive, or APK.
+
 ## Toolchains
 
 - Linux x86_64, OpenJDK 17.
@@ -13,6 +17,11 @@ No publisher private key is needed by the build server.
 - Android NDK 28.2.13676358; ARM64, native min API 26.
 - Gradle 8.13 and Android Gradle Plugin 8.13.2.
 - Python 3 (standard library) and GNU patch for the native build and deterministic AAR/JAR packaging.
+
+The current F-Droid CI image is Debian Trixie. The recipe obtains OpenJDK 17
+from the official Debian Bookworm repositories and explicitly selects it for
+Gradle. Do not assume `apt-get install openjdk-17-jdk-headless` succeeds against
+Trixie repositories alone.
 
 Set `GO` to the full path of the pinned Go binary, `JAVA_HOME` to OpenJDK 17,
 `ANDROID_HOME` to the SDK and `ANDROID_NDK_HOME` to its pinned NDK directory.

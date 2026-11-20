@@ -5,6 +5,16 @@ The page provides the repository link, signing fingerprint and QR code. This is
 an independent publisher repository, separate from the F-Droid main catalog.
 Установка и обновления: [репозиторий F-Droid и QR-код](https://94043.net/fdroid/).
 
+The source in `main` includes the F-Droid preparation for **1.6.1 (build 24)**.
+The [developer-signed candidate APK and exact source](https://github.com/GradeApp/Vikify/releases/tag/vikify-v1.6.1-build24)
+are available on GitHub. The publisher repository currently provides stable
+1.6.0 (build 23). Main-catalog inclusion is pending independent CI and review;
+this project is not yet listed on f-droid.org.
+
+[F-Droid build instructions](docs/FDROID_BUILD.md) ·
+[Submission status](fdroid/SUBMISSION.md) ·
+[Maintenance and project history](docs/PROJECT_HISTORY.md)
+
 > Free and open source Android VLESS VPN client. Supply your own server or subscription.
 > Свободный VLESS VPN-клиент для Android. Подключите свой сервер или подписку.
 
@@ -38,9 +48,9 @@ profiles locally. There is no account registration or analytics in the app.
 ### What it is
 
 An Android application that establishes a local VPN tunnel and routes traffic
-through a locally-running Xray-core instance. A main Proxy subscription supplies
-REALITY, XHTTP and WebSocket + TLS profiles, with optional automatic routing and a
-separate backup server (seven profiles in the current subscription). Users import, refresh, replace
+through a locally-running Xray-core instance. User-supplied VLESS subscriptions
+can contain REALITY, XHTTP and WebSocket + TLS profiles. Available servers and
+server-side routing depend on the provider. Users import, refresh, replace
 or remove one subscription and choose a profile from the home screen. Previously
 saved UUID access remains available until migration or removal. The import form
 accepts clipboard text, live QR scans and QR images. Mixed lists require confirmation before compatible profiles are saved. HTTPS redirects are limited to three hops; certificate verification remains enabled. Specialized sing-box
@@ -133,9 +143,9 @@ details. A template lives at `keystore.properties.example`.
 ### Что это
 
 Android-приложение, поднимающее локальный VPN-туннель и маршрутизирующее
-трафик через локально работающий Xray-core. Основная подписка Proxy содержит
-профили REALITY, XHTTP и WebSocket + TLS, а при настройке провайдером — «Авто»
-и отдельный резервный сервер (семь профилей в текущей подписке). Пользователь импортирует одну
+трафик через локально работающий Xray-core. Пользовательские VLESS-подписки могут
+содержать профили REALITY, XHTTP и WebSocket + TLS. Набор серверов и маршрутизацию
+на стороне сервера определяет провайдер. Пользователь импортирует одну
 подписку, выбирает профиль, обновляет, заменяет или удаляет доступ с главного
 экрана. Ранее сохранённый UUID работает до перехода на подписку или удаления.
 Подписку можно добавить из буфера, отсканировать камерой или выбрать QR из

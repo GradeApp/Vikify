@@ -1,8 +1,9 @@
 # Inclusion request: Vikify
 
-This is a prepared submission, not an open merge request or an accepted listing.
-Copy `metadata/vikify.vpn.yml` into a branch of
-https://gitlab.com/fdroid/fdroiddata after the publication gates below are met.
+Updated 2026-11-20. This is a prepared submission, not an open merge request or
+an accepted listing. The reviewed source and matching developer-signed APK are
+now public. Copy `metadata/vikify.vpn.yml` into a branch of
+https://gitlab.com/fdroid/fdroiddata when submitting for independent review.
 
 ## Suggested merge request title
 
@@ -28,6 +29,11 @@ reachability checks and tunnel connectivity checks.
 - Privacy policy: https://94043.net/vikify/privacy-en.html
 - Application ID: `vikify.vpn` (unchanged for existing installations)
 - Proposed version: `1.6.1`, versionCode `24`
+- Reviewed source commit: `d1707cbe1eb7041dafd39a0f7938bf18226b52cc`
+- Source tag: `vikify-v1.6.1-build24`
+- Candidate release: https://github.com/GradeApp/Vikify/releases/tag/vikify-v1.6.1-build24
+- Developer-signed APK: https://github.com/GradeApp/Vikify/releases/download/vikify-v1.6.1-build24/Vikify-1.6.1-build24-arm64-release.apk
+- APK SHA-256: `204997f77f00c632b11bc0c267cdae8679e7f988539c518389329bb50ca6fd64`
 - Minimum Android: 8.0 / API 26; target 36; ARM64 only; no root required
 - Own code: MIT; Xray-core: MPL-2.0; tun2socks: MIT; Go/mobile: BSD-3-Clause
 
@@ -49,22 +55,35 @@ verification succeeded against the developer-signed APK and the second build.
 Source and APK scanners reported zero problems; metadata lint passed. These
 checks do not substitute for the F-Droid build server pipeline or manual review.
 
-## Publication gates before submitting
+## Completed publication checks
 
 - Artwork review completed: the publisher confirmed the older project artwork,
   the unknown-origin launcher icon was replaced with a new generated design,
   and generated background/hummingbird sources and provenance are included
   under `artwork/`. Project artwork is MIT to the extent rights apply.
-- Publish the exact reviewed source snapshot and tag `vikify-v1.6.1-build24` to
-  the source repository. Replace the recipe's tag with the resulting immutable
-  commit SHA if requested by reviewers.
-- Publish the matching signed APK at the `Binaries` URL and verify anonymous
-  HTTP access and SHA-256. That URL is planned until this publication occurs.
-- Attach the completed Galaxy A03s report and source/build verification records.
-- Confirm maintenance commitment and describe project history to reviewers.
-  Do not invent usage figures or claim that an independent publisher repository
-  is an existing main-catalog listing.
+- Exact reviewed source published on `codex/fdroid-main-1.6.1`, tagged
+  `vikify-v1.6.1-build24`. The submission recipe pins the immutable commit above.
+- Matching signed APK, source archive and preparation records published in the
+  candidate release. Anonymous downloads returned HTTP 200; all archive
+  contents, sizes and SHA-256 checksums matched the locally reviewed artifacts.
+- The source manifest fetched anonymously at the immutable commit matches the
+  reviewed local manifest byte for byte.
+- Galaxy A03s and source/build verification records are included with the
+  prepared submission. The package dated 2026-11-13 supersedes the earlier
+  pre-publication submission draft; the APK and source archive are unchanged.
+
+## Remaining review steps
+
+- Maintenance intention, support contacts and the available project history are
+  documented in [PROJECT_HISTORY.md](../docs/PROJECT_HISTORY.md). The publisher
+  supports inclusion and ongoing maintenance. No user-count claim is made;
+  consolidated public history and local historical evidence are distinguished.
 - Run the F-Droid CI pipeline and resolve maintainer feedback before acceptance.
+
+The November 20 recipe installs OpenJDK 17 from official Debian Bookworm
+repositories because the current F-Droid CI image uses Debian Trixie. It pins
+the Gradle JVM to the same major version as the verified developer build.
+The reviewed app commit, signed APK and signing key remain unchanged.
 
 The source/metadata preparation does not change existing stable downloads or
 the publisher's F-Droid repository. No GitLab issue or merge request has been sent.
