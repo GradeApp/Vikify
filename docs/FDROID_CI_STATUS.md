@@ -3,8 +3,10 @@
 Vikify 1.6.1, versionCode 24, was successfully rebuilt locally using the official
 F-Droid Debian Trixie buildserver container and current fdroidserver. The rebuild
 passed F-Droid's developer-signature comparison. **The hosted GitLab pipeline
-has not run its jobs and must not be described as passing.** No upstream merge
-request has been submitted yet.
+has not run its jobs and must not be described as passing.**
+[Draft request !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350)
+is open for maintainer-assisted CI and policy review; main-catalog acceptance
+has not been granted.
 
 ## Verified build
 
@@ -58,8 +60,10 @@ The account owner can complete GitLab's verification and rerun the pipeline.
 Alternatively, F-Droid's new-app template provides for asking maintainers to
 run CI when GitLab verification prevents using the fork's runners. That route
 requires opening a clearly marked draft request before hosted CI succeeds.
-The current submission authorization is conditional on successful CI, so that
-exception has not been taken automatically.
+The publisher authorized that draft-only route, and
+[!58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350) now explicitly
+requests maintainer-assisted CI. It remains a draft pending hosted checks and
+manual review; opening it does not establish that CI passed.
 
 Manual acceptance is a separate decision. The available development history
 and maintenance intention are documented in [PROJECT_HISTORY.md](PROJECT_HISTORY.md);

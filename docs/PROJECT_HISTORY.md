@@ -31,6 +31,12 @@ For sensitive reports, contact **vikify@proton.me**.
 - **2026-11-20:** public downloads, source hashes, metadata, APK scans and the
   signature-copy check were verified again. The publisher authorized the
   F-Droid CI and submission process, contingent on successful checks.
+- Later on **2026-11-20**, the official F-Droid buildserver container reproduced
+  the publisher APK locally, including signature verification. GitLab blocked
+  hosted CI before job creation pending additional account verification.
+  With the publisher's explicit authorization for that exception,
+  [draft !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350) requests
+  maintainer-assisted CI. No hosted CI success or catalog acceptance is claimed.
 
 No installation-count or audience-size claim is made. Local developer-device
 testing is not presented as evidence of a large or independently verified user

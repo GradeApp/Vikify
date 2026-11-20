@@ -1,9 +1,10 @@
 # Inclusion request: Vikify
 
-Updated 2026-11-20. This is a prepared submission, not an open merge request or
-an accepted listing. The reviewed source and matching developer-signed APK are
-now public. Copy `metadata/vikify.vpn.yml` into a branch of
-https://gitlab.com/fdroid/fdroiddata when submitting for independent review.
+Updated 2026-11-20. [Draft merge request !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350)
+is open for maintainer-assisted CI and independent review. This is not an
+accepted listing. The reviewed source and matching developer-signed APK are
+public; the recipe is in the public GradeApp1/fdroiddata branch
+`codex/vikify-1.6.1`.
 
 Current result: the official F-Droid buildserver container rebuilt the APK
 successfully and verified its developer signature locally. The public fork's
@@ -84,7 +85,8 @@ checks do not substitute for the F-Droid build server pipeline or manual review.
   supports inclusion and ongoing maintenance. No user-count claim is made;
   consolidated public history and local historical evidence are distinguished.
 - Complete hosted F-Droid CI and resolve maintainer feedback before acceptance.
-  A public fork and recipe branch exist; no upstream merge request is open.
+  The draft merge request requests help running CI while GitLab's additional
+  account verification prevents jobs from starting in the public fork.
 
 The November 20 recipe installs OpenJDK 17 from official Debian Bookworm
 repositories because the current F-Droid CI image uses Debian Trixie. It pins
@@ -101,4 +103,5 @@ The F-Droid checkout is retained, its exact commit is pinned, and every runtime
 component is rebuilt from source before the signature-copy comparison.
 
 The source/metadata preparation does not change existing stable downloads or
-the publisher's F-Droid repository. No GitLab issue or merge request has been sent.
+the publisher's F-Droid repository. The draft request does not claim a successful
+hosted pipeline or acceptance by the main catalog.
