@@ -5,11 +5,18 @@ The page provides the repository link, signing fingerprint and QR code. This is
 an independent publisher repository, separate from the F-Droid main catalog.
 Установка и обновления: [репозиторий F-Droid и QR-код](https://94043.net/fdroid/).
 
-The source in `main` includes the F-Droid preparation for **1.6.1 (build 24)**.
-The [developer-signed candidate APK and exact source](https://github.com/GradeApp/Vikify/releases/tag/vikify-v1.6.1-build24)
-are available on GitHub. The publisher repository currently provides stable
-1.6.0 (build 23). Main-catalog inclusion is pending independent CI and review;
-this project is not yet listed on f-droid.org.
+**Stable: Vikify 1.6.1 (build 24)** — the same publisher-signed APK is available
+from the [website](https://94043.net/vikify/),
+[GitHub Releases](https://github.com/GradeApp/Vikify/releases/tag/vikify-v1.6.1-build24)
+and the publisher's F-Droid repository. Install over the existing release to
+retain subscriptions and profile selection; the package and certificate are unchanged.
+
+Vikify is **not listed in the F-Droid main catalog**.
+[Request !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350) was
+closed because unique features were not established. See the
+[comparison and reconsideration criteria](docs/FDROID_COMPARISON.md).
+Local reproducibility passed; hosted GitLab CI did not run its jobs.
+[Stable release and Galaxy verification](docs/RELEASE_1.6.1_BUILD24.ru.md).
 
 [F-Droid build instructions](docs/FDROID_BUILD.md) ·
 [Submission status](fdroid/SUBMISSION.md) ·

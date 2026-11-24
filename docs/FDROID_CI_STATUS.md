@@ -1,3 +1,23 @@
+# Current F-Droid status — 2026-11-24
+
+Request [!58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350#note_4300905331)
+was closed by a maintainer on 2026-11-23 because unique features were not
+established. The last [hosted pipeline](https://gitlab.com/GradeApp1/fdroiddata/-/pipelines/3095986517)
+failed before starting any jobs; no hosted build or technical rejection is inferred.
+The local official-container verification below remains valid for the unchanged APK.
+
+1.6.1 build 24 is now the stable publisher release on the website, GitHub and
+the independent F-Droid repository. Galaxy A03s was checked again on November 24;
+see [the stable report](RELEASE_1.6.1_BUILD24.ru.md).
+No new main-catalog request has been sent: the
+[differentiation gate](FDROID_COMPARISON.md) is not yet met.
+GitLab identity verification alone does not resolve the closure reason.
+
+## Historical verification report — November 20
+
+The following report is preserved as dated evidence. Its statements about an
+open draft described November 20 and are superseded by the current status above.
+
 # F-Droid verification status — 2026-11-20
 
 Vikify 1.6.1, versionCode 24, was successfully rebuilt locally using the official

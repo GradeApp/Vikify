@@ -1,3 +1,21 @@
+# Current inclusion-request status — 2026-11-24
+
+[!58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350#note_4300905331)
+was **closed** on November 23: unique features were not established.
+The application is distributed through the publisher's own repository and is
+not included in the main F-Droid catalog. Build 24 is now the stable publisher
+release; its APK, source tag and signing certificate are unchanged.
+
+See [the comparison and readiness criteria](../docs/FDROID_COMPARISON.md)
+before requesting reconsideration. A duplicate request for unchanged 1.6.1
+has not been submitted. Hosted CI remains unexecuted; the previous local
+container verification is documented in [the CI report](../docs/FDROID_CI_STATUS.md).
+
+## Historical November 20 submission material
+
+The original draft below is preserved for audit. Its open-draft status and
+suggested wording are historical, not instructions to submit it unchanged.
+
 # Inclusion request: Vikify
 
 Updated 2026-11-20. [Draft merge request !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350)
