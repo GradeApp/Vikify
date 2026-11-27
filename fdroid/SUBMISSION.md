@@ -7,8 +7,9 @@ identifiers. It does not silently replace subscriptions or switch VPN sessions.
 TCP/SOCKS results are distinguished from other-app Android VPN traffic, which
 the production report explicitly leaves untested.
 
-The publisher supports a new review of this implementation. Main-catalog
-acceptance has **not** been granted. The independent repository at 94043.net
+The publisher submitted [Draft request !59276](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/59276)
+for review of this implementation. It is open and references the earlier
+decision. Main-catalog acceptance has **not** been granted. The independent repository at 94043.net
 is a separate distribution channel and is not evidence of acceptance by
 F-Droid's main catalog.
 
@@ -40,12 +41,32 @@ These are local application checks. They do not establish that the submitted
 build-25 recipe has passed the official buildserver or hosted GitLab CI. The
 successful November 20 container run below belongs to version 1.6.1 only.
 
+## Current submitted checks
+
+The new [MR-event pipeline](https://gitlab.com/GradeApp1/fdroiddata/-/pipelines/3121379958)
+and [push pipeline](https://gitlab.com/GradeApp1/fdroiddata/-/pipelines/3121371098)
+both report `failed` before any job starts: zero jobs, null start timestamps,
+and no YAML error or failure reason returned by the API. Hosted CI has therefore
+not run the build or tests. The current stop is not labelled a recipe failure;
+its cause has not been confirmed. The earlier account-verification requirement
+is historical evidence, not proof of this pipeline's cause.
+
+The draft explicitly asks maintainers to help start normal F-Droid CI. No
+repeated pipeline retries were requested. Product-policy review and actual
+hosted job results remain pending.
+
+The public tag resolves to `c5ba3d0770c002ddb653ad66311e10a7cbbd8a7c`. Anonymous
+APK/source downloads, the publisher certificate, metadata readmeta/format/lint
+and checkupdates passed; checkupdates left the recipe unchanged. The public
+fork branch is unprotected and its diff contains exactly one metadata file.
+
 ## Recipe and review procedure
 
 The [upstream recipe](metadata/vikify.vpn.yml) targets `vikify-v1.7.0-build25`.
 This embedded tag reference avoids a source commit referring to itself. The
-external fdroiddata submission must resolve that tag and pin its full commit,
-retain only build 25, and contain only `metadata/vikify.vpn.yml`.
+external [fdroiddata submission](https://gitlab.com/GradeApp1/fdroiddata/-/blob/codex/vikify-1.7.0/metadata/vikify.vpn.yml)
+pins the full commit above, retains only build 25 and changes only
+`metadata/vikify.vpn.yml`.
 
 `Binaries` and `AllowedAPKSigningKeys` preserve the permanent publisher
 certificate and compatible updates. The private key is not supplied to F-Droid.
@@ -54,10 +75,10 @@ The publisher APK's SHA-256 is
 Its certificate remains
 `570b4ad5bbe8ab617b8164226b07be21e8011d977bbe7c4e7070a5b1581e37f0`.
 
-The changed-version request must explicitly reference !58350, describe the
-implemented benefit, disclose evidence limits and remain a draft until actual
-recipe/CI and policy review are complete. Current request links and job status
-belong to the
+The changed-version request explicitly references !58350, describes the
+implemented benefit, discloses evidence limits and remains a draft while actual
+recipe/CI and policy review are incomplete. Later request links and job status
+can be checked in the
 [GitLab request list](https://gitlab.com/fdroid/fdroiddata/-/merge_requests?scope=all&state=all&search=Vikify);
 this source document does not assert an unobserved hosted pass or acceptance.
 

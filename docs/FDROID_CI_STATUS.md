@@ -6,6 +6,27 @@ local source/APK scanners. See [the build and Galaxy audit](RELEASE_1.7.0_BUILD2
 These results do not establish a successful run of the new official F-Droid
 recipe/container, hosted CI, or main-catalog acceptance.
 
+The publisher has opened [Draft !59276](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/59276)
+for version 1.7.0, related to the closed !58350 request. The metadata pins public
+release commit `c5ba3d0770c002ddb653ad66311e10a7cbbd8a7c`, preserves the publisher
+certificate, and is the only file changed in an unprotected fork branch.
+Metadata readmeta/format/lint and checkupdates passed locally; checkupdates
+made no changes. Anonymous release APK/source downloads and signature checks
+also passed.
+
+| Hosted event | Observed result |
+|---|---|
+| [MR pipeline 3121379958](https://gitlab.com/GradeApp1/fdroiddata/-/pipelines/3121379958) | Failed before start; zero jobs; start timestamp, YAML error and failure reason are null |
+| [Push pipeline 3121371098](https://gitlab.com/GradeApp1/fdroiddata/-/pipelines/3121371098) | Failed before start; zero jobs; start timestamp, YAML error and failure reason are null |
+
+No hosted build or test job ran, so this is not a completed recipe/build
+failure or a successful CI result. The API does not establish the current
+blocking cause. The account-verification problem recorded for the previous
+request is not asserted as this run's cause. Maintainer assistance starting
+normal F-Droid CI is explicitly requested in the new draft; no repeated
+pipeline retries were triggered. Maintainer policy review and inclusion remain
+pending.
+
 [Current submission status](../fdroid/SUBMISSION.md) records the new recipe
 and any maintainer request. [Publisher release status](RELEASE_1.7.0_PUBLICATION.ru.md)
 records distribution separately. The dated reports below are historical and

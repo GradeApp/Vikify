@@ -12,7 +12,10 @@ or the publisher's F-Droid repository. Install over the existing publisher relea
 to retain subscriptions and profile selection; the package and certificate are unchanged.
 [Publication status and download verification](docs/RELEASE_1.7.0_PUBLICATION.ru.md).
 
-Vikify is **not listed in the F-Droid main catalog**. The historical
+Vikify is **not listed in the F-Droid main catalog**. A new
+[draft request !59276](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/59276)
+asks for maintainer re-review of 1.7.0 and assistance with hosted CI; acceptance
+is pending. The historical
 [request !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350) was
 closed because unique features were not established. See the
 [diagnostics comparison and reconsideration criteria](docs/FDROID_DIAGNOSTICS_COMPARISON.md)
