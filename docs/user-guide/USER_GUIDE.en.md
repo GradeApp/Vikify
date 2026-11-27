@@ -1,6 +1,6 @@
 # Vikify · user guide
 
-Version 1.6.0, versionCode 21. Android 8.0 or newer on ARM64 is required. Before the first connection, read the VPN disclosure and tap Agree and connect. The Privacy policy is available there and in Help. Withdrawing consent in Help disconnects the VPN.
+Version 1.7.0, versionCode 25. Android 8.0 or newer on ARM64 is required. Before the first connection, read the VPN disclosure and tap Agree and connect. The Privacy policy is available there and in Help. Withdrawing consent in Help disconnects the VPN.
 
 ## Add a subscription or profiles
 
@@ -28,6 +28,33 @@ Opening the list checks the server addresses. Check starts another check. A gree
 
 Results last one minute and reset when the network changes. Checks stop when the app leaves the foreground. Only the address and port are checked, without sending credentials. Protocol operation and authorization require an actual VPN connection.
 
+## Diagnostics
+
+Diagnostics is available in version 1.7.0. It helps explain subscription and connection failures without changing saved access.
+
+1. Open **Diagnostics** on the home screen. **Allow direct checks** starts off.
+   Enable it only if you want DNS/TCP checks on the underlying network and a
+   direct subscription request when the selected profile is not connected.
+   These servers can see your source IP. A matching connected profile can be
+   checked through its proxy without enabling direct requests; failures do not
+   fall back to a direct connection.
+2. Tap **Run checks**. Read each result and suggested next step. **Stop** ends
+   the run; an incomplete report is not a successful full check. Diagnostics
+   does not change saved access, select a profile or start/stop VPN.
+3. If a connection is required, **Connect and return** closes diagnostics and
+   starts the normal connection flow. Reopen Diagnostics after connecting.
+4. Choose **View report** at the top, then **Text** or **JSON**. The preview
+   matches the exported file. **Share report** opens Android’s recipient
+   chooser only when you tap it; there is no automatic sending. The report uses
+   predefined codes and bounded numbers, excluding subscription URLs, tokens,
+   UUIDs, profile names, server addresses and raw error messages.
+
+A reachable port or successful proxy HTTPS request does not prove other apps’
+traffic passes through Android TUN; that result remains **Not tested**. If
+Android exposes a VPN whose owner or route cannot be confirmed, network checks
+stop. On older Android this can also happen with Vikify connected. Keep VPN
+protection if you need it. See [diagnostic behavior and limits](../DIAGNOSTICS.md).
+
 ## Update or remove access
 
 The subscription card shows the profile count. Tap Update to refresh. Details contains the last update time and the actions for replacing the link and removing access. Android also schedules a daily background update, and the app refreshes stale data when it returns to the foreground.
@@ -40,6 +67,6 @@ Remove saved access deletes both the subscription and the old UUID from this dev
 
 ## Build
 
-Run `gradlew.bat :app:assembleDebug`. The APK is created at `app/build/outputs/apk/debug/app-debug.apk`.
+Use the [Linux source-build guide](../FDROID_BUILD.md), including preparation of the pinned native components before Gradle. It describes debug and unsigned release builds; do not reuse the historical prebuilt-native Windows workflow.
 
 For signed releases, use external credentials as described in [release signing](../RELEASE_SIGNING.md). Upgrades require the same package and signing identity. Verify native VPN traffic on an ARM64 device.

@@ -11,13 +11,12 @@ AutoName: Vikify VPN
 
 RepoType: git
 Repo: https://github.com/GradeApp/Vikify.git
-Binaries: 
-  https://github.com/GradeApp/Vikify/releases/download/vikify-v%v-build%c/Vikify-%v-build%c-arm64-release.apk
+Binaries: https://github.com/GradeApp/Vikify/releases/download/vikify-v%v-build%c/Vikify-%v-build%c-arm64-release.apk
 
 Builds:
-  - versionName: 1.6.1
-    versionCode: 24
-    commit: d1707cbe1eb7041dafd39a0f7938bf18226b52cc
+  - versionName: 1.7.0
+    versionCode: 25
+    commit: vikify-v1.7.0-build25
     subdir: app
     sudo:
       - echo 'deb https://deb.debian.org/debian bookworm main' > /etc/apt/sources.list.d/vikify-bookworm.list
@@ -37,8 +36,8 @@ Builds:
     prebuild:
       - sed -i '/    if (needsSignedRelease && !unsignedRelease) {/,/^    }/d' build.gradle.kts
       - "cat >> build.gradle.kts <<'EOF'\n\ntasks.matching { it.name == \"extractReleaseVersionControlInfo\"\
-        \ }.configureEach {\n    doLast {\n        val vcsFiles = outputs.files.asFileTree.matching
-        {\n            include(\"**/version-control-info.textproto\")\n        }.files\n\
+        \ }.configureEach {\n    doLast {\n        val vcsFiles = outputs.files.asFileTree.matching\
+        \ {\n            include(\"**/version-control-info.textproto\")\n        }.files\n\
         \        check(vcsFiles.size == 1)\n        vcsFiles.single().writeText(\"\
         generate_error_reason: NO_SUPPORTED_VCS_FOUND\\n\")\n    }\n}\nEOF\ntrue"
       - sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
@@ -62,11 +61,14 @@ MaintainerNotes: |-
   F-Droid strips signingConfigs before prebuild. Remove the resulting
   unused local-keystore validation block for this unsigned build only.
   Binaries and AllowedAPKSigningKeys still enforce the publisher signature.
-  Build 24 was published from the source archive without .git. Reproduce only
-  its non-executable AGP VCS metadata; the complete source commit is pinned
-  above and all code is independently rebuilt and signature-copy verified.
+  Build 25 was built in a clean source directory without .git. Reproduce only
+  its non-executable AGP VCS metadata; retain the checkout and rebuild all code.
+  This upstream recipe references the release tag to avoid a self-referential
+  source commit. Pin the full tag commit in the fdroiddata submission.
+  Local clean builds and signature-copy passed; hosted CI and main-catalog
+  review are separate checks, not inferred from those local results.
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^vikify-v[\d.]+-build\d+$
-CurrentVersion: 1.6.1
-CurrentVersionCode: 24
+CurrentVersion: 1.7.0
+CurrentVersionCode: 25

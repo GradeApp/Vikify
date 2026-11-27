@@ -51,6 +51,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import vikify.vpn.R
 import vikify.vpn.BuildConfig
+import vikify.vpn.diagnostics.DiagnosticSharing
 import vikify.vpn.core.Availability
 import vikify.vpn.core.ProbeEndpoint
 import vikify.vpn.subscription.ProxyProfile
@@ -71,12 +72,13 @@ private val UnavailableInk = Color(0xFFFFAAA5)
 private val Shape = RoundedCornerShape(20.dp)
 
 @Composable
+@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
 fun VikifyHomeScreen(viewModel: HomeViewModel, flightStage: Int = 2) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var details by rememberSaveable { mutableStateOf(false) }
     var policy by rememberSaveable { mutableStateOf(false) }
     val hasAccess = state.store.profiles.isNotEmpty() || state.store.error != null
-    val modal = policy || state.consentOpen || state.importOpen || state.removeOpen || state.helpOpen || (details && hasAccess)
+    val modal = policy || state.diagnosticsOpen || state.consentOpen || state.importOpen || state.removeOpen || state.helpOpen || (details && hasAccess)
     FlightScene(active = !modal, stage = flightStage) {
         LagoonBackdrop(Modifier.fillMaxSize())
         if (state.profilesOpen) {
@@ -112,6 +114,28 @@ fun VikifyHomeScreen(viewModel: HomeViewModel, flightStage: Int = 2) {
         }
     }
     when {
+        state.diagnosticsOpen -> {
+          val diagnosticScroll = rememberScrollState()
+          val diagnosticScope = rememberCoroutineScope()
+          SceneDialog(viewModel::closeDiagnostics, flightStage, scroll = diagnosticScroll,
+            panelColor = Panel.copy(alpha = .96f)) {
+            val context = LocalContext.current
+            val chooserTitle = stringResource(R.string.diagnostics_title)
+            Column(Modifier.fillMaxWidth().semantics { testTagsAsResourceId = true },
+                verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                DiagnosticsContent(state.diagnostic, viewModel::runDiagnostics,
+                    viewModel::cancelDiagnostics, viewModel::closeDiagnostics,
+                    onShare = { format ->
+                        state.diagnostic.report?.let { report ->
+                            try {
+                                DiagnosticSharing.share(context, report, format == DiagnosticExportFormat.JSON, chooserTitle)
+                            } catch (_: Exception) { viewModel.diagnosticShareFailed() }
+                        }
+                    }, onConnect = { viewModel.closeDiagnostics(); viewModel.connect() },
+                    onContentStart = { diagnosticScope.launch { diagnosticScroll.scrollTo(0) } })
+            }
+          }
+        }
         policy -> SceneDialog({ policy = false }, flightStage) {
             DialogTitle(R.string.privacy_policy)
             val context = LocalContext.current
@@ -229,6 +253,7 @@ private fun ConnectionCard(state: HomeUiState, vm: HomeViewModel) {
             if (con.hasSession && !stop) LinkButton(R.string.disconnect, action = vm::disconnect)
         }
         con.error?.let { ErrorText(stringResource(it)) }
+        LinkButton(R.string.diagnostics_title, !state.working && !con.busy, vm::openDiagnostics)
     }
 }
 
@@ -356,6 +381,7 @@ private fun DialogActions(left: Int, onLeft: () -> Unit, right: Int, enabled: Bo
 @Composable
 private fun SceneDialog(onDismiss: () -> Unit, stage: Int,
     scroll: androidx.compose.foundation.ScrollState = rememberScrollState(),
+    panelColor: Color = DialogPanel,
     content: @Composable ColumnScope.() -> Unit) {
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(
         usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
@@ -387,7 +413,7 @@ private fun SceneDialog(onDismiss: () -> Unit, stage: Int,
             Box(Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(12.dp),
                 contentAlignment = Alignment.Center) {
                 Surface(Modifier.widthIn(max = 560.dp).fillMaxWidth(), shape = Shape,
-                    color = DialogPanel, contentColor = Ink) {
+                    color = panelColor, contentColor = Ink) {
                     Column(Modifier.verticalScroll(scroll).padding(16.dp).birdClearance(),
                         verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         content()

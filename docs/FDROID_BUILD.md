@@ -44,7 +44,7 @@ Set `GO` to the full path of the pinned Go binary, `JAVA_HOME` to OpenJDK 17,
 
 ```sh
 python3 scripts/build-native.py --prepare
-./gradlew --no-daemon --max-workers=2 -PunsignedRelease=true :app:assembleRelease
+./gradlew --no-daemon --max-workers=2 -PunsignedRelease=true :app:clean :app:assembleRelease
 ```
 
 The preparation step downloads Go source modules from pinned module graphs,
@@ -63,9 +63,14 @@ or runtime feature change is used for F-Droid.
 ## Publisher signing and reproducibility
 
 Build in two separate clean directories, with separate Go compilation caches.
+Do not sign an incremental development build for publication. Compose can emit
+equivalent but byte-different stability masks after incremental compilation.
+Run the clean command above in an isolated release checkout/source directory;
+it removes that checkout's generated `app/build` outputs before rebuilding.
 Compare their unsigned APKs and generated native hashes. Sign the first using
-`scripts/SignVerifiedApk.java`, the existing external properties file and Android
-build-tools 34.0.0 apksigner.jar. The signing helper checks the expected certificate
+`scripts/SignVerifiedApk.java`, the existing external properties file and the
+pinned Android build-tools 34.0.0 apksigner.jar.
+The signing helper checks the expected certificate
 before signing and passes passwords via child process environment variables.
 
 Run `apksigcopier compare` or `fdroidserver.common.verify_apks` against the

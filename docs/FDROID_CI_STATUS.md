@@ -1,4 +1,17 @@
-# Current F-Droid status — 2026-11-24
+# F-Droid status — 1.7.0 build 25
+
+Updated November 26, 2026. The tested 1.7.0 package passed local Linux builds,
+56 unit tests, APK/AAB reproducibility, publisher-signature comparison and
+local source/APK scanners. See [the build and Galaxy audit](RELEASE_1.7.0_BUILD25.ru.md).
+These results do not establish a successful run of the new official F-Droid
+recipe/container, hosted CI, or main-catalog acceptance.
+
+[Current submission status](../fdroid/SUBMISSION.md) records the new recipe
+and any maintainer request. [Publisher release status](RELEASE_1.7.0_PUBLICATION.ru.md)
+records distribution separately. The dated reports below are historical and
+must not be read as current pipeline or release status.
+
+## Historical status — 2026-11-24
 
 Request [!58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350#note_4300905331)
 was closed by a maintainer on 2026-11-23 because unique features were not

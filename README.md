@@ -5,18 +5,21 @@ The page provides the repository link, signing fingerprint and QR code. This is
 an independent publisher repository, separate from the F-Droid main catalog.
 Установка и обновления: [репозиторий F-Droid и QR-код](https://94043.net/fdroid/).
 
-**Stable: Vikify 1.6.1 (build 24)** — the same publisher-signed APK is available
-from the [website](https://94043.net/vikify/),
-[GitHub Releases](https://github.com/GradeApp/Vikify/releases/tag/vikify-v1.6.1-build24)
-and the publisher's F-Droid repository. Install over the existing release to
-retain subscriptions and profile selection; the package and certificate are unchanged.
+**Stable: Vikify 1.7.0 (build 25)** — publisher-signed ARM64 APK for Android 8.0+.
+Download through the [website](https://94043.net/vikify/),
+[GitHub Releases](https://github.com/GradeApp/Vikify/releases/tag/vikify-v1.7.0-build25)
+or the publisher's F-Droid repository. Install over the existing publisher release
+to retain subscriptions and profile selection; the package and certificate are unchanged.
+[Publication status and download verification](docs/RELEASE_1.7.0_PUBLICATION.ru.md).
 
-Vikify is **not listed in the F-Droid main catalog**.
-[Request !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350) was
+Vikify is **not listed in the F-Droid main catalog**. The historical
+[request !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350) was
 closed because unique features were not established. See the
-[comparison and reconsideration criteria](docs/FDROID_COMPARISON.md).
-Local reproducibility passed; hosted GitLab CI did not run its jobs.
-[Stable release and Galaxy verification](docs/RELEASE_1.6.1_BUILD24.ru.md).
+[diagnostics comparison and reconsideration criteria](docs/FDROID_DIAGNOSTICS_COMPARISON.md)
+and [current submission status](fdroid/SUBMISSION.md).
+Local Linux builds, reproducibility, scanners and Galaxy A03s checks passed for
+1.7.0; these results do not establish hosted F-Droid CI success or catalog acceptance.
+[Build and Galaxy verification](docs/RELEASE_1.7.0_BUILD25.ru.md).
 
 [F-Droid build instructions](docs/FDROID_BUILD.md) ·
 [Submission status](fdroid/SUBMISSION.md) ·
@@ -39,12 +42,14 @@ profiles locally. There is no account registration or analytics in the app.
 - [English](#english)
   - [What it is](#what-it-is)
   - [Quick facts](#quick-facts)
+  - [Diagnostics](#diagnostics)
   - [Disclaimer — TL;DR](#disclaimer--tldr)
   - [Build](#build)
   - [Documents](#documents)
 - [Русский](#русский)
   - [Что это](#что-это)
   - [Ключевые факты](#ключевые-факты)
+  - [Диагностика](#диагностика)
   - [Отказ от ответственности — TL;DR](#отказ-от-ответственности--tldr)
   - [Сборка](#сборка)
   - [Документы](#документы)
@@ -79,7 +84,7 @@ The application uses:
 | Platform | Android 8.0+ (API 26+) |
 | Primary ABI | `arm64-v8a` only |
 | Language / UI | Kotlin + Jetpack Compose + Material 3 |
-| Version | 1.6.1 (versionCode 24; F-Droid preparation) |
+| Version | 1.7.0 (versionCode 25) |
 | Publisher | VictoriaV · [Privacy policy](https://94043.net/vikify/privacy.html) |
 | Min SDK / Target SDK | 26 / 36 |
 | Third-party cores | Xray-core (`libxray.so`), tun2socks (source-built Go/JNI AAR) |
@@ -89,6 +94,22 @@ The application uses:
 | Local storage | EncryptedSharedPreferences (URL, profiles, selection, refresh state; legacy UUID) |
 | Licence (this project's own code) | MIT — see `LICENSE` |
 | Bundled third-party licences | See `docs/BUNDLED_THIRD_PARTY_NOTICES.md` |
+
+### Diagnostics
+
+Open **Diagnostics → Run checks** to investigate the saved subscription and
+selected profile. Checks preserve saved access, profile selection and the VPN session. **Allow direct checks** is initially off: enable
+it explicitly for underlying-network DNS/TCP and subscription retrieval when
+the selected profile is not connected. A matching connected profile can be
+checked through its proxy, with no direct fallback.
+
+After checking, choose **View report**, select **Text** or **JSON**, and use
+**Share report** only if you want to send it. Reports contain predefined codes
+and bounded numbers, without access credentials or server addresses; there is
+no automatic upload. Proxy HTTPS success does not verify other apps’ traffic
+through Android TUN, which remains **Not tested**. See the
+[usage guide](docs/user-guide/USER_GUIDE.en.md#diagnostics)
+and [diagnostic limits](docs/DIAGNOSTICS.md).
 
 ### Disclaimer — TL;DR
 
@@ -175,7 +196,7 @@ Android-приложение, поднимающее локальный VPN-ту
 | Платформа | Android 8.0+ (API 26+) |
 | Основная ABI | Только `arm64-v8a` |
 | Язык / UI | Kotlin + Jetpack Compose + Material 3 |
-| Версия | 1.6.1 (versionCode 24; F-Droid preparation) |
+| Версия | 1.7.0 (versionCode 25) |
 | Издатель | VictoriaV · [Политика конфиденциальности](https://94043.net/vikify/privacy.html) |
 | min SDK / target SDK | 26 / 36 |
 | Сторонние ядра | Xray-core (`libxray.so`), tun2socks (Go/JNI AAR из исходников) |
@@ -185,6 +206,22 @@ Android-приложение, поднимающее локальный VPN-ту
 | Локальное хранилище | EncryptedSharedPreferences (URL, профили, выбор, обновление; прежний UUID) |
 | Лицензия (код самого проекта) | MIT — см. `LICENSE` |
 | Лицензии сторонних компонентов | см. `docs/BUNDLED_THIRD_PARTY_NOTICES.md` |
+
+### Диагностика
+
+Откройте **«Диагностика» → «Запустить проверку»**, чтобы проверить подписку
+и выбранный профиль. Проверка сохраняет доступ, выбор профиля и сеанс VPN. **«Разрешить прямые проверки»** изначально выключено:
+отдельное включение разрешает DNS/TCP через базовую сеть и загрузку подписки,
+если выбранный профиль не подключён. Работающий выбранный профиль проверяется
+через его прокси, без прямого повтора при ошибке.
+
+После проверки нажмите **«Посмотреть отчёт»**, выберите **«Текст»** или **JSON**
+и при необходимости **«Поделиться отчётом»**. В отчёте только заданные коды и
+ограниченные числа, без реквизитов доступа и адресов серверов. Автоматической
+отправки нет. Успех HTTPS через прокси не подтверждает трафик других приложений
+через Android TUN: он остаётся **«Не проверено»**. Подробнее —
+[руководство](docs/user-guide/USER_GUIDE.ru.md#диагностика)
+и [ограничения диагностики](docs/DIAGNOSTICS.md).
 
 ### Отказ от ответственности — TL;DR
 

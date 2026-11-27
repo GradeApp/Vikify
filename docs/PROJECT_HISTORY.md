@@ -38,6 +38,14 @@ For sensitive reports, contact **vikify@proton.me**.
   [draft !58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350) requests
   maintainer-assisted CI. No hosted CI success or catalog acceptance is claimed.
 
+- **2026-11-26:** version 1.7.0, build 25, added opt-in diagnostics, staged
+  explanations and allowlisted TXT/JSON reports. Local Linux reproducibility,
+  scanner, signature and Galaxy A03s checks passed. The
+  [test audit](RELEASE_1.7.0_BUILD25.ru.md),
+  [publisher release status](RELEASE_1.7.0_PUBLICATION.ru.md) and
+  [F-Droid submission status](../fdroid/SUBMISSION.md) distinguish these
+  results from publication, hosted CI and catalog acceptance.
+
 No installation-count or audience-size claim is made. Local developer-device
 testing is not presented as evidence of a large or independently verified user
 base. Reviewers can assess the available history under the inclusion policy.

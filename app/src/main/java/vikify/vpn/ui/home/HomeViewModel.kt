@@ -2,6 +2,14 @@ package vikify.vpn.ui.home
 
 import android.app.Application
 import vikify.vpn.R
+import vikify.vpn.BuildConfig
+import vikify.vpn.diagnostics.DiagnosticRunner
+import vikify.vpn.diagnostics.DiagnosticReportData
+import vikify.vpn.diagnostics.DiagnosticProtocol
+import vikify.vpn.diagnostics.DiagnosticEvent
+import vikify.vpn.diagnostics.DiagnosticStage
+import vikify.vpn.diagnostics.DiagnosticStatus
+import vikify.vpn.diagnostics.DiagnosticCode
 import vikify.vpn.core.VpnConsent
 import vikify.vpn.core.AvailabilityState
 import vikify.vpn.core.EndpointAvailability
@@ -46,7 +54,9 @@ data class HomeUiState(
     val consentError: Boolean = false,
     val consentAccepted: Boolean = false,
     val availability: AvailabilityState = AvailabilityState(),
-    val operationError: SubscriptionError? = null
+    val operationError: SubscriptionError? = null,
+    val diagnosticsOpen: Boolean = false,
+    val diagnostic: DiagnosticUiState = DiagnosticUiState()
 )
 
 class HomeViewModel(application: Application, private val controller: VpnController) : AndroidViewModel(application) {
@@ -57,6 +67,10 @@ class HomeViewModel(application: Application, private val controller: VpnControl
     private var operation: Job? = null
     private var lastAutoRefresh = 0L
     private var operationGeneration = 0
+    private var diagnosticJob: Job? = null
+    private var diagnosticGeneration = 0
+    private var diagnosticStore: SubscriptionState? = null
+    private var diagnosticConnection: ConnectionState? = null
     private var probeRoute: ProbeRoute? = null
     private val reachability = ProfileReachability(application) { route ->
         probeRoute = route
@@ -68,19 +82,28 @@ class HomeViewModel(application: Application, private val controller: VpnControl
 
     init {
         viewModelScope.launch { repository.state.collect { store ->
-            mutableState.update { it.copy(store = store) }
+            if (state.value.diagnostic.busy && diagnosticStore != store) cancelDiagnostics()
+            mutableState.update { it.copy(store = store, diagnostic = it.diagnostic.copy(
+                canConnect = canConnectDiagnostic(store, it.connection))) }
             syncAvailability()
         } }
         viewModelScope.launch { availability.state.collect { value -> mutableState.update { it.copy(availability = value) } } }
         viewModelScope.launch { controller.state.collect { connection ->
-            mutableState.update { it.copy(connection = connection) }
+            val expected = diagnosticConnection
+            if (state.value.diagnostic.busy && expected != null &&
+                (connection.profile != expected.profile ||
+                    connection.hasSession != expected.hasSession ||
+                    connection.phase == ConnectionPhase.ERROR ||
+                    connection.phase == ConnectionPhase.DISCONNECTING)) cancelDiagnostics()
+            mutableState.update { it.copy(connection = connection, diagnostic = it.diagnostic.copy(
+                canConnect = canConnectDiagnostic(it.store, connection))) }
             reachability.setOwnVpn(connection.hasSession)
         } }
         if (repository.state.value.snapshot?.local == false) SubscriptionRefreshJob.schedule(application)
         else SubscriptionRefreshJob.cancel(application)
     }
 
-    fun openImport() { mutableState.update { it.copy(importOpen = true, importUrl = "", importHost = null, importLocal = false, importPreview = null, importError = null) } }
+    fun openImport() { closeDiagnostics(); mutableState.update { it.copy(importOpen = true, importUrl = "", importHost = null, importLocal = false, importPreview = null, importError = null) } }
     fun setImportUrl(value: String) { mutableState.update { it.copy(importUrl = value, importHost = null, importLocal = false, importPreview = null, importError = null) } }
     fun cancelImportPreview() { mutableState.update { it.copy(importPreview = null) } }
     fun importProblem(message: Int) {
@@ -133,7 +156,7 @@ class HomeViewModel(application: Application, private val controller: VpnControl
     }
 
     fun refresh() {
-        if (state.value.working || state.value.importOpen) return
+        if (state.value.working || state.value.importOpen || state.value.diagnosticsOpen) return
         val generation = ++operationGeneration
         operation = viewModelScope.launch {
             mutableState.update { it.copy(working = true, operationError = null) }
@@ -165,14 +188,15 @@ class HomeViewModel(application: Application, private val controller: VpnControl
         if (availability.setContext(probeRoute, targets) && state.value.profilesOpen) availability.check()
     }
     fun startAvailability() { reachability.start() }
-    fun stopAvailability() { reachability.stop(); availability.stop() }
+    fun stopAvailability() { cancelDiagnostics(); reachability.stop(); availability.stop() }
     fun checkProfiles() { availability.check(force = true) }
     fun showProfiles(show: Boolean) {
         mutableState.update { it.copy(profilesOpen = show) }
         if (show) availability.check()
     }
-    override fun onCleared() { reachability.stop(); availability.stop(); super.onCleared() }
+    override fun onCleared() { diagnosticJob?.cancel(); reachability.stop(); availability.stop(); super.onCleared() }
     fun select(id: String) {
+        cancelDiagnostics()
         viewModelScope.launch {
             try { repository.select(id) } catch (e: SubscriptionException) {
                 mutableState.update { it.copy(operationError = e.reason) }
@@ -182,6 +206,7 @@ class HomeViewModel(application: Application, private val controller: VpnControl
     }
 
     fun connect() {
+        cancelDiagnostics()
         val store = state.value.store
         if (!store.canConnect || store.selectedProfile == null) return
         if (!VpnConsent.accepted(getApplication())) {
@@ -208,11 +233,12 @@ class HomeViewModel(application: Application, private val controller: VpnControl
         val cleared = VpnConsent.set(getApplication(), false)
         mutableState.update { it.copy(consentAccepted = !cleared, consentError = !cleared) }
     }
-    fun disconnect() { controller.disconnect() }
+    fun disconnect() { cancelDiagnostics(); controller.disconnect() }
     fun showRemove(show: Boolean) { mutableState.update { it.copy(removeOpen = show) } }
     fun showHelp(show: Boolean) { mutableState.update { it.copy(helpOpen = show) } }
 
     fun remove() {
+        closeDiagnostics()
         if (state.value.working) return
         val generation = ++operationGeneration
         operation = viewModelScope.launch {
@@ -231,6 +257,95 @@ class HomeViewModel(application: Application, private val controller: VpnControl
                 if (generation == operationGeneration) mutableState.update { it.copy(working = false) }
             }
         }
+    }
+
+    /** Diagnostic operations never call repository.refresh(), select(), connect() or disconnect(). */
+    private fun canConnectDiagnostic(store: SubscriptionState, connection: ConnectionState): Boolean {
+        val selected = store.selectedProfile
+        val alreadySelected = connection.hasSession && connection.profile?.id == selected?.id &&
+            connection.profile?.revision == selected?.revision
+        return store.canConnect && !connection.busy && !alreadySelected
+    }
+
+    fun openDiagnostics() {
+        if (state.value.working) return
+        val current = state.value
+        mutableState.update { it.copy(diagnosticsOpen = true,
+            diagnostic = DiagnosticUiState(canConnect = canConnectDiagnostic(current.store, current.connection))) }
+    }
+
+    fun runDiagnostics(allowDirect: Boolean) {
+        if (!state.value.diagnosticsOpen || state.value.diagnostic.busy || state.value.working) return
+        val store = repository.state.value
+        val connection = controller.state.value
+        diagnosticStore = store
+        diagnosticConnection = connection
+        val generation = ++diagnosticGeneration
+        mutableState.update { it.copy(diagnostic = it.diagnostic.copy(busy = true,
+            events = emptyList(), report = null, interrupted = false, shareError = false)) }
+        diagnosticJob = viewModelScope.launch {
+            try {
+                val report = DiagnosticRunner(getApplication()).run(store, connection, allowDirect) { event ->
+                    if (generation == diagnosticGeneration) mutableState.update {
+                        it.copy(diagnostic = it.diagnostic.copy(events = it.diagnostic.events + event))
+                    }
+                }
+                if (generation == diagnosticGeneration) mutableState.update {
+                    it.copy(diagnostic = it.diagnostic.copy(busy = false, report = report))
+                }
+            } catch (cancelled: CancellationException) {
+                if (generation == diagnosticGeneration) cancelDiagnostics()
+                throw cancelled
+            } catch (_: Exception) {
+                // Never render or serialize exception.message: it may contain credentials.
+                if (generation == diagnosticGeneration) finishInterruptedDiagnostics(DiagnosticCode.INTERNAL_ERROR)
+            } finally {
+                if (generation == diagnosticGeneration) {
+                    diagnosticJob = null
+                    diagnosticStore = null
+                    diagnosticConnection = null
+                }
+            }
+        }
+    }
+
+    fun cancelDiagnostics() = finishInterruptedDiagnostics(DiagnosticCode.CANCELLED)
+
+    private fun finishInterruptedDiagnostics(code: DiagnosticCode) {
+        if (!state.value.diagnostic.busy) return
+        val selected = diagnosticStore?.selectedProfile
+        val protocol = when (selected?.transport) {
+            "tcp" -> DiagnosticProtocol.REALITY
+            "xhttp" -> DiagnosticProtocol.XHTTP_TLS
+            "ws" -> DiagnosticProtocol.WEBSOCKET_TLS
+            else -> DiagnosticProtocol.UNKNOWN
+        }
+        ++diagnosticGeneration
+        diagnosticJob?.cancel()
+        diagnosticJob = null
+        diagnosticStore = null
+        diagnosticConnection = null
+        mutableState.update {
+            val prior = it.diagnostic.events
+            val stage = DiagnosticStage.values().getOrElse(
+                (prior.lastOrNull()?.stage?.ordinal ?: -1) + 1) { DiagnosticStage.ANDROID_VPN }
+            val events = if (prior.lastOrNull()?.code == code) prior else prior + DiagnosticEvent(
+                stage, if (code == DiagnosticCode.CANCELLED) DiagnosticStatus.CANCELLED else DiagnosticStatus.FAIL, code)
+            it.copy(diagnostic = it.diagnostic.copy(busy = false, interrupted = code == DiagnosticCode.CANCELLED,
+                events = events,
+                report = DiagnosticReportData(appVersionCode = BuildConfig.VERSION_CODE,
+                    androidApi = android.os.Build.VERSION.SDK_INT, protocol = protocol,
+                    events = events, completed = false)))
+        }
+    }
+
+    fun closeDiagnostics() {
+        cancelDiagnostics()
+        mutableState.update { it.copy(diagnosticsOpen = false, diagnostic = DiagnosticUiState()) }
+    }
+
+    fun diagnosticShareFailed() {
+        mutableState.update { it.copy(diagnostic = it.diagnostic.copy(shareError = true)) }
     }
 }
 

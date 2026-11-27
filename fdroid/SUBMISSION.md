@@ -1,3 +1,78 @@
+# Vikify 1.7.0: main-catalog reconsideration
+
+Version 1.7.0, build 25 adds a read-only diagnostic workflow: staged results,
+explanations and next actions, explicit consent for direct requests, and
+previewed TXT/JSON reports whose schema excludes access secrets and endpoint
+identifiers. It does not silently replace subscriptions or switch VPN sessions.
+TCP/SOCKS results are distinguished from other-app Android VPN traffic, which
+the production report explicitly leaves untested.
+
+The publisher supports a new review of this implementation. Main-catalog
+acceptance has **not** been granted. The independent repository at 94043.net
+is a separate distribution channel and is not evidence of acceptance by
+F-Droid's main catalog.
+
+## Previous decision and present evidence
+
+For this submission, a live GitLab check confirmed that
+[!58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350#note_4300905331)
+remains closed. Its only human reply, by linsui on November 23, says the app
+does not provide unique features. No additional prohibition on reconsideration
+was observed. The old pipeline has no jobs or start timestamp; its failed
+status is not a completed technical review.
+
+The new workflow and a limited source comparison with pinned XiVPN/Forkray
+revisions are documented in [Diagnostics](../docs/DIAGNOSTICS.md) and
+[the comparison follow-up](../docs/FDROID_DIAGNOSTICS_COMPARISON.md).
+Neither competitor was run for that comparison. There is no user study,
+measured superiority, app-wide privacy ranking, or proof that other clients
+lack an equivalent workflow. Whether the implemented combination addresses
+the prior concern remains a maintainer decision.
+
+The [build-25 audit](../docs/RELEASE_1.7.0_BUILD25.ru.md) records clean local
+reproducibility, signature-copy verification, 56 passing unit tests (29 for
+diagnostics), scanner evidence and Galaxy A03s update/traffic checks. Lint has
+zero errors and 29 recorded warnings. The final artifact bindings and
+publication results are documented in the
+[publication report](../docs/RELEASE_1.7.0_PUBLICATION.ru.md).
+
+These are local application checks. They do not establish that the submitted
+build-25 recipe has passed the official buildserver or hosted GitLab CI. The
+successful November 20 container run below belongs to version 1.6.1 only.
+
+## Recipe and review procedure
+
+The [upstream recipe](metadata/vikify.vpn.yml) targets `vikify-v1.7.0-build25`.
+This embedded tag reference avoids a source commit referring to itself. The
+external fdroiddata submission must resolve that tag and pin its full commit,
+retain only build 25, and contain only `metadata/vikify.vpn.yml`.
+
+`Binaries` and `AllowedAPKSigningKeys` preserve the permanent publisher
+certificate and compatible updates. The private key is not supplied to F-Droid.
+The publisher APK's SHA-256 is
+`1ac9b17329e018bddebfbe2b00c65894f044db4ea77789b40cbccec0a6c69512`.
+Its certificate remains
+`570b4ad5bbe8ab617b8164226b07be21e8011d977bbe7c4e7070a5b1581e37f0`.
+
+The changed-version request must explicitly reference !58350, describe the
+implemented benefit, disclose evidence limits and remain a draft until actual
+recipe/CI and policy review are complete. Current request links and job status
+belong to the
+[GitLab request list](https://gitlab.com/fdroid/fdroiddata/-/merge_requests?scope=all&state=all&search=Vikify);
+this source document does not assert an unobserved hosted pass or acceptance.
+
+The [official template](https://gitlab.com/fdroid/fdroiddata/-/blob/master/.gitlab/merge_request_templates/Default.md)
+provides for maintainer-assisted CI when GitLab account verification prevents
+using a fork's runners. Do not infer that a new pipeline is blocked merely
+because the old one was. Quality requirements concerning differentiated value
+and development history remain open review issues; no unsupported user-count
+or three-month public-development claim is made.
+
+## Historical November 24 status and November 20 submission
+
+The following dated material is preserved unchanged for audit. Its old version,
+pipeline and open-draft wording does not describe the build-25 request.
+
 # Current inclusion-request status — 2026-11-24
 
 [!58350](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/58350#note_4300905331)

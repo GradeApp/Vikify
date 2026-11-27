@@ -4,6 +4,8 @@ Import HTTPS subscriptions, plain or Base64 VLESS lists, or an individual VLESS 
 
 Choose REALITY, XHTTP or WebSocket/TLS profiles, refresh your subscription and inspect original profile details. Reachability colours show whether a server's TCP endpoint is reachable; they do not guarantee a working VPN connection.
 
+Run Diagnostics for stage-by-stage subscription and connection explanations. Direct network checks require explicit permission; failed proxy checks do not fall back directly. Preview and explicitly share TXT/JSON reports without subscription credentials, profile names, server addresses or raw errors. Reports are never uploaded automatically. A successful proxy HTTPS check does not prove other apps use the Android VPN tunnel; that stage is marked not tested.
+
 Connection settings are stored encrypted on the device. There are no advertising or analytics SDKs. The app makes documented connectivity checks and contacts the servers and subscription URL you configure. Camera access is used only for QR scanning.
 
 The interface is available in English and Russian, with a tropical scene and animated hummingbird. Requires Android 8.0 or later and an ARM64 device. No root access is required.

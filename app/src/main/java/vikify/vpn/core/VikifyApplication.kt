@@ -9,5 +9,6 @@ class VikifyApplication : Application() {
         super.onCreate()
         // Migrate installations interrupted while older builds were running Xray.
         java.io.File(filesDir, "xray_config.json").delete()
+        vikify.vpn.diagnostics.DiagnosticSharing.cleanup(this)
     }
 }

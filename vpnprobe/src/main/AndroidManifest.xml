@@ -1,5 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <application android:label="Vikify QA probe" android:allowBackup="false" android:usesCleartextTraffic="false" />
+    <application android:label="Vikify QA probe" android:allowBackup="false" android:usesCleartextTraffic="false">
+        <activity
+            android:name=".DiagnosticShareCaptureActivity"
+            android:label="Vikify report test"
+            android:process=":report_capture"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="application/json" />
+            </intent-filter>
+        </activity>
+    </application>
 </manifest>

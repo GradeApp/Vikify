@@ -4,7 +4,7 @@
 <nav aria-label="Language"><a href="privacy.html" lang="ru" hreflang="ru">Русский</a></nav>
 <main>
 <h1>Vikify VPN privacy policy</h1>
-<p>Effective November 5, 2026</p>
+<p>Effective November 26, 2026 · Vikify 1.7.0</p>
 <h2>Who operates the app</h2>
 <p>VictoriaV publishes the Vikify VPN app for Android. For privacy questions about the app, contact vikify@proton.me. The VPN provider who supplies your subscription operates or selects the subscription and tunnel servers.</p>
 <h2>VPN traffic</h2>
@@ -14,6 +14,12 @@
 <h2>Storage and network checks</h2>
 <p>The URL, UUIDs, profile settings and selection are kept in encrypted private preferences until you replace or remove access. The client passes the selected configuration to the local Xray process in memory. The app does not keep a browsing history. To check the tunnel, it contacts www.gstatic.com and, if needed, cp.cloudflare.com via the proxy. Those endpoints see the proxy exit IP. The request does not include the subscription token or UUID.</p>
 <p>When you open the profile list or tap Check, Vikify may briefly connect directly to the server addresses and ports in your subscription. It sends no application payload, UUID or subscription token. These servers see your source IP and connection time; the network DNS resolver may receive their domain names. Colours show server reachability only and do not guarantee a working VPN. Results remain in memory for one minute. Checks stop when the app leaves the foreground.</p>
+<h2>Optional diagnostics</h2>
+<p>Diagnostics starts only when you tap Run checks. It checks the saved profile format without changing your subscription, selected profile or VPN session. If the selected profile is already connected, it can check the subscription response and HTTPS connectivity through that session’s local proxy. HTTPS probes contact www.gstatic.com/generate_204 and, if needed, cp.cloudflare.com/generate_204. There is no direct-network fallback for these proxy checks. A successful proxy request does not verify traffic from other Android apps; that separate result is marked Not tested.</p>
+<p>The Allow direct checks option is off when you open Diagnostics. Enabling it permits DNS lookups and short TCP connections on the underlying network and, when the selected profile is not connected, an HTTPS subscription request. The subscription server receives the token in the URL; servers see your source IP and the network DNS resolver may see their domain names. TCP checks send no application payload. If Android reports a VPN whose owner or route cannot be safely confirmed, network diagnostics are blocked. On older Android this may also happen with Vikify connected. Diagnostics does not intentionally bypass a VPN; detection relies on the networks Android exposes. Downloaded diagnostic profiles are inspected in memory and do not replace saved access. Connect and return is a separate, explicit action using the normal VPN connection flow.</p>
+<h2>Diagnostic reports and sharing</h2>
+<p>Results and report previews stay in memory. TXT and JSON reports contain only predefined result codes, stage, status, route, suggested action, protocol category, app version code, Android API level, completion state, rounded durations and optional HTTP status and profile counts. They exclude subscription URLs, tokens, UUIDs, profile names, server addresses, ports, device identifiers, logs and raw error messages.</p>
+<p>Only tapping Share report after preview creates a file in the app’s private cache and opens Android’s sharing chooser. Vikify does not upload reports automatically. You choose the receiving app; its own storage and sharing rules apply to any copy it receives. Up to eight cached reports are kept. Files at least one hour old are removed on the next app startup or share action, not by a timer exactly one hour later. Clearing the app’s cache or uninstalling removes these local files.</p>
 <h2>Your controls</h2>
 <p>Disconnect from the home screen or notification. Withdraw VPN consent in Help. Remove saved access in Details to delete local access and cancel scheduled updates. Uninstalling deletes local data. Local access removal does not delete records held by an independent provider. Ask your provider about its own server logging, retention and deletion rules.</p>
 </main></body></html>
